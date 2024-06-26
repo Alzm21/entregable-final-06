@@ -1,5 +1,7 @@
 const catchError = require('../utils/catchError');
 const User = require('../models/User');
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 
 const getAll = catchError(async(req, res) => {
     const results = await User.findAll();
@@ -19,6 +21,10 @@ const remove = catchError(async(req, res) => {
 });
 
 const update = catchError(async(req, res) => {
+
+    const fieldsRemove = [password, email]
+    fieldsRemove.forEach((field) => delete req.body)
+
     const { id } = req.params;
     const result = await User.update(
         req.body,
@@ -29,15 +35,27 @@ const update = catchError(async(req, res) => {
 });
 
 const login = catchError(async(req, res) => {
-    const { email, password } = req.params
+    const { email, password } = req.body
+
+    const user = await User.findOne({where: { email } })
+    if(!user) res.send(401).json({error: 'Invalid Credentials Fam'})
+    
+    const isValid = await bcrypt.compare(password, user.password)
+    if(!isValid) return res.sendStatus(404)
+
+    const token = jwt.sign(
+        {user},
+        process.env.TOKEN_SECRET,
+        {expiresIn: '1d'} //changeable
+    )
     
 })
-
 
 
 module.exports = {
     getAll,
     create,
     remove,
-    update
+    update,
+    login
 }
