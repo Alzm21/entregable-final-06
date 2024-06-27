@@ -41,14 +41,14 @@ const login = catchError(async(req, res) => {
     if(!user) res.send(401).json({error: 'Invalid Credentials Fam'})
     
     const isValid = await bcrypt.compare(password, user.password)
-    if(!isValid) return res.sendStatus(404)
+    if(!isValid) return res.sendStatus(401)
 
     const token = jwt.sign(
         {user},
         process.env.TOKEN_SECRET,
-        {expiresIn: '1d'} //changeable
+        {expiresIn: '30d'} //changeable
     )
-    
+    return res.status(200).json({user, token})
 })
 
 

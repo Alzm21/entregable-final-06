@@ -1,1 +1,1 @@
-const User = require("./User");
+require("./User");
