@@ -34,7 +34,6 @@ test("POST -> 'BASE_URL', shoult return status code 201, res.body.firstName === 
     .send(user)
     
     userId = res.body.id
-    console.log(userId)
     
     expect(res.statusCode).toBe(201)
     expect(res.body).toBeDefined()
@@ -62,11 +61,41 @@ test("PUT -> 'BASE_URL/:id', should return status code 200, res.body.firstName =
         .set('Authorization', `Bearer ${TOKEN}`)
         .send(userUpdate)
 
-        console.log(res.body)
+        // console.log(res.body)
 
     expect(res.statusCode).toBe(200)
     expect(res.body).toBeDefined()
     expect(res.body.firstName).toBe(userUpdate.firstName)
+})
+
+test("POST -> 'BASE_URL/:id', should return status code 401", async () => { //for error
+    const body = {
+        email: "alvaro@email.com",
+        password: "a1232313534dfsfds4"
+    }
+    const res = await request(app)
+        .post(`${BASE_URL}/login`)
+        .send(body)
+
+    expect(res.statusCode).toBe(401)
+})
+
+test("POST -> 'BASE_URL/login', should return status code 200, res.body.user to be defined,res.body.toke to be defined and res.body.user.email === body.email", async () => {
+    const body = {
+        email: "alvaro@email.com",
+        password: "alvaro1234"
+    }
+
+    const res = await request(app)
+        .post(`${BASE_URL}/login`)
+        .send(body)
+
+    /* console.log(res.body) */
+    expect(res.statusCode).toBe(200)
+    expect(res.body).toBeDefined()
+    expect(res.body.user).toBeDefined()
+    expect(res.body.token).toBeDefined()
+    expect(res.body.user.email).toBe(body.email)
 })
 
 test("DELETE -> 'BASE_URL/:id', should return status code 204", async () => {
