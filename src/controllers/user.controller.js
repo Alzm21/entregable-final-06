@@ -52,11 +52,21 @@ const login = catchError(async(req, res) => {
     return res.status(200).json({user, token})
 })
 
+    const logged = catchError(async(req,res) => {
+        const user = req.user.id
+        return res.json(user)
+
+        /* const userId = req.user.id
+        const result = await User.findByPk(userId)
+        return res.json(result) */
+    })
+
 
 module.exports = {
     getAll,
     create,
     remove,
     update,
-    login
+    login,
+    logged
 }

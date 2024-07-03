@@ -4,11 +4,15 @@ const routerCategory = require('./category.router');
 const routerProduct = require('./product.route');
 const routerCart = require('./cart.router');
 const { verifyJwt } = require('../utils/verifyJWT');
+const routerPurchase = require('./purchase.router');
+const routerProductImg = require('./productImage.router');
 const router = express.Router();
 
 router.use('/users', routerUser)
 router.use('/categories', routerCategory)
 router.use('/products', routerProduct)
-router.use('/carts', verifyJwt, routerCart)
+router.use('/cart', verifyJwt, routerCart)
+router.use('/purchase', verifyJwt, routerPurchase)
+router.use('/product_images', verifyJwt, routerProductImg)
 
 module.exports = router;
