@@ -1,4 +1,3 @@
-require('../models')
 const request = require('supertest')
 const app = require('../app')
 const path = require('path')
@@ -20,13 +19,16 @@ beforeAll(async () => {
     TOKEN = res.body.token
 })
 
-test("POST -> 'BASE_URL', should return status code 201 and res.body.url, res.body.filename to be defined", async () => {
-    
-    const localImage = path.join(__dirname, 'createData', 'imageTest.jpg')
+test("POST -> 'BASE_URL', async() should return status code 201, res.body.url, res.body.filename to be Defined", async () => {
+
+    const localImage = path.join(__dirname, 'createData', 'testimage.png')
+
+    console.log(localImage)
+  
     const res = await request(app)
-        .post(BASE_URL)
-        .set("Authorization", `Bearer ${TOKEN}`)
-        .attach('img', localImage)
+      .post(BASE_URL)
+      .set("Authorization", `Bearer ${TOKEN}`)
+      .attach('img', localImage)
 
     imageId = res.body.id
 
